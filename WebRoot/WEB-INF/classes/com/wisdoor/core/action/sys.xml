@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <!-- 配置所有系统后台通用的东东(比如权限管理....),其他请自觉新建 --> 
+    
+     <!--机构管理 -->
+    <package name="org" namespace="/sys_" extends="mydefault"> 
+		<action name="orgAction" class="orgAction">  
+		    <result name="list" >/sys_/org/orgList.jsp</result>    
+<!-- 		    <result name="ui">/sys_/org/org.jsp</result> 
+		    <result name="edit"  type="redirect">/sys_/orgAction!list</result> 
+		    <result name="del"  type="redirect">/sys_/orgAction!list</result> 
+		    <result name="selectTree"/ -->   
+		</action>       
+    </package> 
+    
+    <package name="user" namespace="/sys_" extends="mydefault"> 
+		<action name="userAction" class="userAction">   
+		    <result name="index" >${directUrl}</result> 
+		    <result name="loginPage" >${directUrl}</result>
+		    <result name="loadLeftMenu">/back/leftframe.jsp</result> 
+		    <result name="userinfo">/back/userinfo.jsp</result>
+		    <result name="menuroot">/back/mainframe.jsp</result>  
+            <result name="menuroot_top">/back/topframe.jsp</result>
+            <result name="list">/sys_/user/userList.jsp</result>       
+		</action>     
+    </package>   
+    
+     <package name="sysUser"  namespace="/sysCommon" extends="mydefault"> 
+		<action name="sysUserAction" class="userAction">  
+		 	 <result name="validateUser"/> 
+		 	 <result name="validateUser2"/> 
+		 	 <result name="validateUser3"/>
+		 	 <result name="validateCode"/>      
+		</action>  
+    </package>      
+ 
+    <!--通用附件类 -->
+    <package name="sysFile"  namespace="/sysCommon" extends="mydefault"> 
+		<action name="sysFileUpload" class="fileUploadAction"> 
+		 	 <result name="saveUploadFile"/>    
+		 	 <result name="saveUploadFiles"/> 
+		 	 <result name="delete"/>      
+		</action>     
+    </package>       
+     
+</struts>

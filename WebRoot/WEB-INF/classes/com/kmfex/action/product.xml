@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!--商品管理 -->
+	<package name="product" namespace="/back" extends="mydefault">
+		<action name="productTypeAction" class="productTypeAction">
+			<result name="list">/back/product/productTypeList.jsp</result>
+			<result name="edit">/back/product/productTypeEdit.jsp</result>
+		</action>
+		<action name="productAction" class="productAction">
+			<result name="list">/back/product/productList.jsp</result>
+			<result name="edit">/back/product/productEdit.jsp</result>
+		</action>
+		<!-- <action name="memberBaseAction" class="memberBaseAction">
+			<result name="list">/back/member/memberBaseList.jsp</result>
+			<result name="newlist">/back/member/memberBaseList_json.jsp</result>
+			<result name="newlist_topOrg">/back/member/memberBaseList_json_topOrg.jsp</result>
+			<result name="showlog">/back/member/showlog.jsp</result>
+			<result name="showalllog">/back/member/showalllog.jsp</result>
+			<result name="exportInvestorsEx">/back/member/exportInvestorsEx.jsp</result>
+			<result name="listForChoose">/back/member/selectUserList.jsp</result>
+			<result name="tList">/back/member/tMemberBaseList.jsp</result>
+			<result name="notAuditedList">/back/member/notAuditedMemberBaseList.jsp
+			</result>
+			<result name="memberDetails">/back/member/memberBaseDetails.jsp
+			</result>
+			<result name="memberBankAccounts">/back/member/memberBaseBankAccounts.jsp
+			</result>
+			<result name="edit">/back/member/memberBaseEdit.jsp</result>
+			<result name="change">/back/member/memberBaseChange.jsp</result>
+			<result name="resetPasswordUi">/back/member/resetPasswordUi.jsp</result>
+			<result name="createMemberSuccess">/back/member/createMemberSuccess.jsp</result>
+			<result name="totalMembers">/back/member/totalMembers.jsp</result>
+			<result name="notPassAuditedList">/back/member/notPassAuditedMemberList.jsp
+			</result>
+			<result name="checkIdCard" />
+			<result name="checkBusCode" />
+		</action>
+		
+		<action name="businessCenterAction" class="businessCenterAction">
+			<result name="list">/back/member/businessCenterList.jsp</result>
+			<result name="edit">/back/member/businessCenterEdit.jsp</result>
+		</action> -->
+		
+	</package>
+</struts>
