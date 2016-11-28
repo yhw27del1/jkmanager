@@ -157,13 +157,13 @@ public class UserAction extends BaseAction implements Preparable {
 			//User userTemp=userService.findUser(userName, password);
 			User userByUserName=userService.findUser(userName); 
 			if(userByUserName == null){//用户名不存在
-				LOG.warn("登录号不存在");
+				LOG.warn("用户名或密码错误");
 				DoResultUtil.doStringResult(ServletActionContext.getResponse(),"9"); 
 				return null;
 			}else{
 				User loginIngUser=userService.findUser(userName, password);
 				if(loginIngUser == null){//密码错误
-					LOG.warn("密码错误");
+					LOG.warn("用户名或密码错误");
 					DoResultUtil.doStringResult(ServletActionContext.getResponse(),"8"); 
 					return null;
 				}else{

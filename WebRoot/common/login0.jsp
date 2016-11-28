@@ -198,13 +198,6 @@
     </style>
 </head>
 <body id="login" onload="isTop();">
- <!--<script type="text/javascript">  
-    $.post("/mobile/mobileAction!isFm",null,function(d,status){ 
-	    if(d.m=="2"){    
-	       window.location.href ='/m/login.jsp';
-		}
-	});
- </script>-->
     <div id="wrappertop"></div>
     <div id="wrapper">
         <div id="content">
@@ -237,7 +230,7 @@
 			 <p>
                    <label class="loginlabel" for="userPassword"> &nbsp;&nbsp;&nbsp;&nbsp;验证码:</label>
                     <span style="float:left;"> 
-                          <input id="userCode" name="userCode" type="text" class="logininputpwd ui-widget-content ui-corner-all" />  <!--  onblur="vilidateCodew();"-->
+                          <input id="userCode" name="userCode" type="text" class="logininputpwd ui-widget-content ui-corner-all" />
 					</span>
 					<span>   
                           &nbsp;&nbsp;<img id="code" border="0" src="/randomMyCode.jsp?Height=14&d=<%=Math.random() * 100000%>&CodeType=3" alt="点击刷新" title="点击刷新" height="30" width="80px;"/>
@@ -246,8 +239,6 @@
 				</p>
 				<div style="text-align:center">
                 	<button id="loginId" class="positive" >登录</button>
-                	<!--  <button id='loginIdReset' class="positive">重置</button>-->
-                	  <!-- 取登录的错误信息 -->
                 	 <br/>
                 	 <br/> 
                  	 <br/>  

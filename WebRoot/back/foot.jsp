@@ -17,7 +17,7 @@
 							<table>
 								<tr>
 									<td style="text-align:right;">
-											Copyright ©. 昆明小微企业金融交易服务有限公司 All rights reserved.	
+											2016 Copyright ©. 云南康健溢生健康管理有限公司 All rights reserved.	
 									</td>
 								</tr>
 							</table>
