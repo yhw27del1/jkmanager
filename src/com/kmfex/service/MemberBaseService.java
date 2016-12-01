@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+
 //import com.kmfex.MemberTotalVO;
 import com.kmfex.model.MemberBase;
 import com.wisdoor.core.model.User;
@@ -104,14 +105,14 @@ public interface MemberBaseService extends BaseService<MemberBase> {
 	public List<MemberBase> listAllMembersByCondition(String name,
 			String typeId, String orgCode, String orgName,
 			String province, String city, Date startDate, Date endDate);
-	
-	/*
-	 *会员统计，1 会员总数；2 融资人总数；3 投资人总数；4 担保公司总数
-	public List<MemberTotalVO> totalMembers(Date startDate,Date endDate,String openOrgCode);
-	*/
 
 	public List<Map<String, Object>> listMembersByCondition2(String keyword, String jingbanren,String memberTypeId,
 			 String coding, String orgName,
-			String provinceCode, String cityCode, int i, int j, Date startDate,
-			Date endDate, String bank, String signState,String channel);
+			String provinceCode, String cityCode, int i, int j);
+	
+	
+	
+	public List<Map<String, Object>> listTreeByCurMember(String code);
+	
+	public List<Map<String, Object>> listByCurMember(String code,int pageSize, int pageNo);
 }

@@ -60,6 +60,7 @@ public class MemberBase implements Serializable {
 	/**分类  0  个人   1 商务中心**/
 	public String category;
 	
+	//登录编码
 	public String code;
 	
 	/**
@@ -186,10 +187,11 @@ public class MemberBase implements Serializable {
 		this.pName = pName;
 	}
 
-	public MemberBase(String id, String category, String pName, String pPhone,
+	public MemberBase(String id, String code, String pName, String pPhone,
 			String pMobile,
 			MemberType memberType) {
 		this.id = id;
+		this.code = code;
 		this.pName = pName;
 		this.pPhone = pPhone;
 		this.pMobile = pMobile;
@@ -233,13 +235,14 @@ public class MemberBase implements Serializable {
 		this.pMobile2 = pMobile2;
 	}
 
-	public String getFudaoren() {
+	/*public String getFudaoren() {
 		return fudaoren;
 	}
 
 	public void setFudaoren(String fudaoren) {
 		this.fudaoren = fudaoren;
 	}
+	*/
 
 
 
@@ -440,5 +443,13 @@ public class MemberBase implements Serializable {
 			}
 		}
 		return obj;
+	}
+
+	public String getFudaoren() {
+		return fudaoren;
+	}
+
+	public void setFudaoren(String fudaoren) {
+		this.fudaoren = fudaoren;
 	}
 }

@@ -3,6 +3,7 @@ package com.wisdoor.core.page;
 import java.util.List;
 
 public class PageView<T> {
+	
 	/** 分页数据 **/
 	private List<T> records;
 	/** 页码开始索引和结束索引 **/

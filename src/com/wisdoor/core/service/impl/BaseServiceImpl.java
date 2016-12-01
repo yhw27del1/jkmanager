@@ -1012,6 +1012,27 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
 		}
 	}
 	
+	
+	@Override
+	public List<Map<String, Object>> queryForList(String sql, int page, int pagesize,boolean printSQL) {
+		if(page <= 0 && pagesize > 0 ) page = 1;
+		else if( page > 0 && pagesize <= 0) pagesize = 15;
+		int row_start = (page - 1) * pagesize;
+		int row_end = page * pagesize;
+		StringBuilder sql0 = new StringBuilder(sql);
+		if(page > 0 && pagesize > 0 ){
+			sql0.insert(0, "select * from ( select a.*, rownum rn from (").append(") a where rownum <= "+ row_end +" ) where rn > ").append(row_start);
+		}
+		if(printSQL) { 
+			printSQL(sql.toString(), null);
+		}
+		try{
+			return this.jdbcTemplate.queryForList(sql0.toString());
+		} catch (EmptyResultDataAccessException empty) {
+			return null;
+		}
+	}
+	
 	@Override
 	public List<Map<String, Object>> queryForList(String fields, String tablename, String wheresql,Object[] args, int page, int pagesize) {
 		return this.queryForList(fields, tablename, wheresql, args, page, pagesize, false);

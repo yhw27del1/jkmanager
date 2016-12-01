@@ -3,6 +3,7 @@ package com.kmfex.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.annotation.Resource;
 
 import oracle.jdbc.OracleTypes;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
 import com.kmfex.model.MemberBase;
@@ -204,16 +206,15 @@ public class MemberBaseImpl extends BaseServiceImpl<MemberBase> implements
 	
 	public List<Map<String, Object>> listMembersByCondition2(String name,String jingbanren,
 			String typeId, String orgCode, String orgName,
-			String province, String city, int pageSize, int pageNo,
-			Date startDate, Date endDate,String bank,String signState,String channel) {
+			String province, String city, int pageSize, int pageNo) {
 		List<Map<String, Object>> result = null;
 		try {
 			
 		ArrayList<Object> args_list = new ArrayList<Object>();
-		SimpleDateFormat startDateFormat = new SimpleDateFormat(
+		/*SimpleDateFormat startDateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd 00:00:00");
 		SimpleDateFormat endDateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd 23:59:59");
+				"yyyy-MM-dd 23:59:59");*/
 
 		//PageView<MemberBase> pageView = new PageView<MemberBase>(pageSize,pageNo);
 		StringBuilder sb = new StringBuilder("");
@@ -230,7 +231,7 @@ public class MemberBaseImpl extends BaseServiceImpl<MemberBase> implements
 		}
 		
 		if (!isEmpty(jingbanren)) {
-			sb.append(" and t.jingbanren = ? ");
+			sb.append(" and t.fudaoren = ? ");
 			args_list.add(jingbanren);
 		}
 
@@ -255,15 +256,7 @@ public class MemberBaseImpl extends BaseServiceImpl<MemberBase> implements
 			args_list.add(typeId);
 		}
 		
-		if(null!=channel&&!"全部".equals(channel)&&!"".equals(channel)){
-			if("1".equals(channel)){
-				sb.append(" and u.channel = 1 ");
-			}else if("2".equals(channel)){
-				sb.append(" and u.channel = 2 ");
-			}
-		}
-
-		if (null != startDate && null != endDate) {
+		/*if (null != startDate && null != endDate) {
 			sb.append(" and (t.createDate >= to_date('"
 					+ startDateFormat.format(startDate)
 					+ "','yyyy-mm-dd hh24:mi:ss') and t.createDate <= to_date('"
@@ -280,20 +273,17 @@ public class MemberBaseImpl extends BaseServiceImpl<MemberBase> implements
 					+ endDateFormat.format(endDate)
 					+ "','yyyy-mm-dd hh24:mi:ss')");
 		}
-
+*/
 		sb.append(" order by createdate desc");
 		
-		result = this.queryForList("u.channel,t.id,u.username,u.realname,a.balance_,t.createdate,t.pSex,t.idCardNo," +
-				"tml.levelname,tmt.name as tyname,a.frozenAmount,t.provinceName,t.cityName," +
-				"t.category,o.name_ as orgname,t.state,t.jingbanren,u.flag,u.accountNo,u.signBank,u.signType," +
-				"t.pName,t.eName,t.pMobile,t.eMobile,t.eContactMobile,t.qq,t.email,t.firstauditdate,t.recentauditdate",
+		result = this.queryForList("t.id,t.code,u.username,u.realname,t.createdate,t.pSex,t.idCardNo," +
+				"tmt.name as tyname,t.provinceName,t.cityName," +
+				"t.category,o.name_ as orgname,t.fudaoren," +
+				"t.pName,t.pMobile,t.qq,t.email,(select u1.username from sys_user u1 where u1.id=t.creator_id) as creator",
 				
-				" t_member_base t left join sys_user u on t.user_id = u.id" +
+				" t_member t left join sys_user u on t.user_id = u.id" +
 				" left join sys_org o on u.org_id = o.id" +
-				" left join t_member_types tmt on t.membertype_id = tmt.id " +
-				" left join t_member_level tml on t.memberlevel_id = tml.id " +
-				" left join t_banklibrary b on t.bank_id = b.id " +
-				" left join sys_account a on u.useraccount_accountid_ = a.accountid_",
+				" left join t_member_type tmt on t.membertype_id = tmt.id ",
 				sb.toString(),args_list.toArray(),pageNo,pageSize,false);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -490,5 +480,47 @@ public class MemberBaseImpl extends BaseServiceImpl<MemberBase> implements
 			return null;
 		}
 	}*/
+	
+	public List<Map<String, Object>> listTreeByCurMember(String code){
+		    List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+			
+			//List<MemberBase> prs = this.getScrollDataCommon("from t_member t start with t.code = ? connect by prior t.code = t.fudaoren ", code);
+		    Session session = this.getHibernateTemplate().getSessionFactory().openSession();
+		    @SuppressWarnings("unchecked")
+			List<MemberBase> prs = (List<MemberBase>)(session.createSQLQuery("select {t.*} from t_member t start with t.code = ? connect by prior t.code = t.fudaoren ").addEntity("t", MemberBase.class).setString(0, code).list());
+		    //select t.id,t.pname,t.code,t.fudaren 
+			for (MemberBase pr : prs) {
+			  Map<String,Object> list = new HashMap<String,Object>();
+				list.put("id", pr.getCode());
+				list.put("pId", pr.getFudaoren());
+				list.put("name",pr.getpName());	
+				result.add(list);
+			}			
+			return result;
+		
+	}
+	
+	
+	public List<Map<String, Object>> listByCurMember(String code,int pageSize, int pageNo) {
+		List<Map<String, Object>> result = null;
+		try {
+              ArrayList<Object> args_list = new ArrayList<Object>();
+              result = this.queryForList("select t.id,t.code,u.username,u.realname,t.createdate,t.pSex,t.idCardNo," +
+      				"tmt.name as tyname,t.provinceName,t.cityName," +
+      				"t.category,o.name_ as orgname,t.fudaoren," +
+      				"t.pName,t.pMobile,t.qq,t.email,(select u1.username from sys_user u1 where u1.id=t.creator_id) as creator from"+       				
+      				" t_member t left join sys_user u on t.user_id = u.id" +
+      				" left join sys_org o on u.org_id = o.id" +
+      				" left join t_member_type tmt on t.membertype_id = tmt.id"+
+      				" start with t.code='"+code+"'"+" connect by prior t.code = t.fudaoren",pageNo,pageSize,false);
+              
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	//select {t.*} from t_member t start with t.code = ? connect by prior t.code = t.fudaoren ")
 
 }

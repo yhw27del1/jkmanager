@@ -15,6 +15,10 @@
 		</action>
 		<action name="memberBaseAction" class="memberBaseAction">
 			<result name="list">/back/member/memberBaseList.jsp</result>
+			<result name="edit">/back/member/memberBaseEdit.jsp</result>
+			<!-- 框架展示 -->
+			<result name="show">/back/member/memberBaseShow.jsp</result>
+			<!-- 会员信息列表 -->
 			<result name="newlist">/back/member/memberBaseList_json.jsp</result>
 			<result name="newlist_topOrg">/back/member/memberBaseList_json_topOrg.jsp</result>
 			<result name="showlog">/back/member/showlog.jsp</result>
@@ -28,7 +32,7 @@
 			</result>
 			<result name="memberBankAccounts">/back/member/memberBaseBankAccounts.jsp
 			</result>
-			<result name="edit">/back/member/memberBaseEdit.jsp</result>
+			
 			<result name="change">/back/member/memberBaseChange.jsp</result>
 			<result name="resetPasswordUi">/back/member/resetPasswordUi.jsp</result>
 			<result name="createMemberSuccess">/back/member/createMemberSuccess.jsp</result>

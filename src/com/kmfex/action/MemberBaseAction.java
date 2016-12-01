@@ -687,6 +687,7 @@ public class MemberBaseAction extends BaseAction implements Preparable {
 			String orgNo = loginUser.getOrg().getShowCoding();
 
 			memberBase.memberType = memberTypeService.selectById(memberTypeId);
+			memberBase.category =category;
 			//memberBase.banklib = bankLibraryService.selectById(banklibrary_id);
 
 			/*if (memberBase.category.equals(MemberBase.CATEGORY_ORG)) {
@@ -1316,6 +1317,39 @@ public class MemberBaseAction extends BaseAction implements Preparable {
 		this.bank = bank;
 	}
 
+	
+	public String show() {
+		//logUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //String code = logUser.getUsername();
+       // List<Map<String, Object>> result = memberBaseService.listTreeByCurMember(code);
+        
+		return "show";
+	}
+	
+	
+	public void json_for_myMember(){
+		try {
+			
+			logUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	        String code = logUser.getUsername();
+	        List<Map<String, Object>> result = memberBaseService.listTreeByCurMember(code);
+	        
+			PrintWriter out = ServletActionContext.getResponse().getWriter();
+			JSONArray array = new JSONArray();
+			JSONObject temp = new JSONObject();
+			for(int i=0;i<result.size();i++){
+				
+				temp.element("id", result.get(i).get("id"));
+				temp.element("pId", result.get(i).get("pId"));
+				temp.element("name", result.get(i).get("name"));
+				array.add(temp);
+			}
+			out.print(array);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void getAllMemberBaseList(){
 		try {
 			//TODO 
@@ -1323,11 +1357,12 @@ public class MemberBaseAction extends BaseAction implements Preparable {
 			int rows = Integer.parseInt(request.getParameter("rows"));
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-			logUser = (User) SecurityContextHolder.getContext()
-					.getAuthentication().getPrincipal();
+			logUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			String orgName = null;// loginUser.getOrg().getName();
+			List<Map<String, Object>> result =new ArrayList<Map<String, Object>>();
+			List<Map<String, Object>> result2 =new ArrayList<Map<String, Object>>();
 			
-			if (Org.TOP_ORG_CODEING.equals(logUser.getOrg().getCoding()) || Org.TOP_ORG_CODEING2.equals(logUser.getOrg().getCoding())) {
+			if ("2".equals(logUser.getTypeFlag()) || Org.TOP_ORG_CODEING2.equals(logUser.getOrg().getCoding())) {
 				this.setTopOrg(true);
 				if(!(this.orgName == null || this.orgName.trim().equals(""))){
 					String strPattern="^\\d+$";
@@ -1340,28 +1375,35 @@ public class MemberBaseAction extends BaseAction implements Preparable {
 						orgName = this.orgName;
 				}else
 					orgName = this.orgName;
+				
+				// 页面上分页查询满足条件的会员信息
+				result =
+						memberBaseService.listMembersByCondition2(keyword,fudaoren,
+								memberTypeId, logUser.getOrg().getCoding(), orgName, provinceCode,
+								cityCode,rows,getPage());
+				
+				// 页面上分页查询满足条件的会员信息
+				result2 =
+						memberBaseService.listMembersByCondition2(keyword,fudaoren,
+								memberTypeId, logUser.getOrg().getCoding(), orgName, provinceCode,
+								cityCode,9999999,1);
+						
+				
+			}else{
+				// 页面上分页查询满足条件的会员信息
+				result =
+						memberBaseService.listByCurMember(logUser.getUsername(),rows,getPage());
+				
+				// 页面上分页查询满足条件的会员信息
+				result2 =
+						memberBaseService.listByCurMember(logUser.getUsername(),9999999,1);
 			}
-			// 页面上分页查询满足条件的会员信息
-			List<Map<String, Object>> result =
-					memberBaseService.listMembersByCondition2(keyword,fudaoren,
-							memberTypeId, logUser.getOrg()
-									.getCoding(), orgName, provinceCode,
-							cityCode,rows,getPage(),
-							startDate, endDate, bank,signState,channel);
 			
-			// 页面上分页查询满足条件的会员信息
-			List<Map<String, Object>> result2 =
-					memberBaseService.listMembersByCondition2(keyword,fudaoren,
-							memberTypeId, logUser.getOrg().getCoding(), orgName, provinceCode,
-							cityCode,9999999,1,
-							startDate, endDate, bank,signState,channel);
-					
 			int total = result2 == null? 0 : result2.size() ;
-			
 			if(total > 0){
 				for (Map<String, Object> obj : result) {
 					if ("0".equals(obj.get("category"))){
-						obj.put("PNAME", obj.get("eName"));
+						obj.put("PNAME", obj.get("pName"));
 					}
 					obj.put("showok", true);
 				}
@@ -1495,8 +1537,7 @@ public class MemberBaseAction extends BaseAction implements Preparable {
 					memberBaseService.listMembersByCondition2(keyword,fudaoren,
 							memberTypeId, logUser.getOrg()
 									.getCoding(), orgName, provinceCode,
-							cityCode, 9999999, 1,
-							startDate, endDate, bank,signState,channel);
+							cityCode, 9999999, 1);
 			HttpServletRequest request = ServletActionContext.getRequest();
 			request.setAttribute("list", result);
 		} catch (Exception ex) {

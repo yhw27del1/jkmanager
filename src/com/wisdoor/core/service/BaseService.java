@@ -166,6 +166,9 @@ public interface BaseService<T> {
 	
 	public int update(String sql,Object[] args,boolean printSQL) throws Exception;;
 	
+	
+	///
+	public List<Map<String, Object>> queryForList(String sql,int page, int pagesize,boolean printSQL) throws Exception;
 	/**
 	 * <span style="color:red">不建议使用，有SQL注入风险,看接口里，有新方法</span>
 	 */
